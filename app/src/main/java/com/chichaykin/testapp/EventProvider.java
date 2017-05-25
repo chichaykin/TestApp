@@ -1,17 +1,21 @@
 package com.chichaykin.testapp;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import java.util.concurrent.TimeUnit;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
- * Emits events every 100ms.
+ * Emits events every 100ms and delay each item to 200ms
  */
 
 public class EventProvider {
 
-  Observable<String> start() {
+  Observable<String> observe() {
     return Observable.interval(100, TimeUnit.MILLISECONDS)
-      .map(l -> Long.toString(l));
+      .onBackpressureLatest()
+      .map(l -> Long.toString(l))
+      .concatMap(i -> Observable.just(i).delay(200, TimeUnit.MILLISECONDS))
+      .observeOn(AndroidSchedulers.mainThread())
+      .share();
   }
 }
