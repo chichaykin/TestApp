@@ -10,7 +10,7 @@ public class App extends Application {
   private static final String TAG = "App";
   //TODO use dagger to inject this field
   private EventProvider evenProvider = new EventProvider(
-    Schedulers.computation(), AndroidSchedulers.mainThread());
+    Schedulers.computation(), AndroidSchedulers.mainThread(), new Utils(Schedulers.test()));
 
   @Override public void onCreate() {
     super.onCreate();
@@ -33,6 +33,6 @@ public class App extends Application {
     connectedObservable.subscribe(s -> Log.d(TAG, "Listener 3: " + s),
         e -> Log.e(TAG, e.getMessage()));
 
-    connectedObservable.connect(); //start emit items
+    connectedObservable.connect(); //start emitting items
   }
 }

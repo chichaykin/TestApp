@@ -22,6 +22,15 @@ android {
     targetCompatibility 1.8
     sourceCompatibility 1.8
   }
+
+  testOptions {
+    unitTests.all {
+      // All the usual Gradle options.
+      testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+      }
+    }
+  }
 }
 
 dependencies {
