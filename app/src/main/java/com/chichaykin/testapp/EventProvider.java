@@ -11,23 +11,16 @@ import java.util.concurrent.TimeUnit;
 
 public class EventProvider {
 
-  private Scheduler uiScheduler;
   private Scheduler computationScheduler;
-  private Utils utils;
 
-  public EventProvider(Scheduler uiScheduler, Scheduler computationScheduler, Utils utils) {
-    this.uiScheduler = uiScheduler;
+  public EventProvider(Scheduler computationScheduler) {
     this.computationScheduler = computationScheduler;
-    this.utils = utils;
   }
 
   Observable<String> observe() {
     return Observable.interval(0, 100, TimeUnit.MILLISECONDS, computationScheduler)
       .onBackpressureLatest()
       .map(l -> Long.toString(l))
-      .concatMap(i -> Observable.just(i).delay(200, TimeUnit.MILLISECONDS, computationScheduler)
-              .compose(utils.loggy("Network request: " + i)).map(b ->(String)b))
-      //.observeOn(uiScheduler);
-    ;
+      .concatMap(i -> Observable.just(i).delay(200, TimeUnit.MILLISECONDS, computationScheduler));
   }
 }
